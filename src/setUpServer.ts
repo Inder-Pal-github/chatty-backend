@@ -7,15 +7,16 @@ import cookieSession from 'cookie-session';
 import HTTP_STATUS from 'http-status-codes';
 import compression from 'compression';
 import 'express-async-errors';
-import { config } from './config';
-import applicationRoutes from './routes';
-import { CustomError, IErrorResponse } from './shared/globals/helpers/error-handler';
+import { config } from '@root/config';
+import applicationRoutes from '@root/routes';
 import Logger from 'bunyan';
+import { CustomError, IErrorResponse } from '@global/helpers/error-handler';
 
 const SERVER_PORT = 8080;
 const log: Logger = config.createLogger('server');
 
 export class MyServer {
+
   private app: Application;
   constructor(app: Application) {
     this.app = app;
@@ -30,24 +31,20 @@ export class MyServer {
   }
 
   private securityMiddlware(app: Application): void {
-    app.use(
-      cookieSession({
-        name: 'session',
-        keys: [config.SECRET_KEY_ONE!, config.SECRET_KEY_TWO!],
-        maxAge: 7 * 24 * 60 * 60 * 1000,
-        secure: config.NODE_ENV !== 'development'
-      })
-    );
+    app.use(cookieSession({
+      name: 'session',
+      keys: [config.SECRET_KEY_ONE!, config.SECRET_KEY_TWO!],
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+      secure: config.NODE_ENV !== 'development',
+    }));
     app.use(hpp());
     app.use(helmet());
-    app.use(
-      cors({
-        origin: config.CLIENT_URL,
-        credentials: true, // This important to set it to true otherwise cookies might not work.
-        optionsSuccessStatus: 200,
-        methods: ['GET', 'POST', 'DELETE', 'PUT', 'PATCH', 'OPTIONS']
-      })
-    );
+    app.use(cors({
+      origin: config.CLIENT_URL,
+      credentials: true,  // This important to set it to true otherwise cookies might not work.
+      optionsSuccessStatus: 200,
+      methods: ['GET', 'POST', 'DELETE', 'PUT', 'PATCH', 'OPTIONS']
+    }));
   }
   // Basic middleware for the application
   private standardMiddlware(app: Application): void {
@@ -84,12 +81,14 @@ export class MyServer {
     }
   }
 
-  private createSocketIO(httpServer: http.Server): void {}
 
   private startHttpServer(httpServer: http.Server): void {
     log.info(`Server started with process ${process.pid}`);
     httpServer.listen(SERVER_PORT, () => {
       log.info(`Starting server on port ${SERVER_PORT}`);
     });
+  }
+  private createSocketIO(httpServer: http.Server): void {
+    log.info('Socket connection');
   }
 }
