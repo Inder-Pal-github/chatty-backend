@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "start": "nodemon ./build/app.js",
-    "dev": "nodemon -r tsconfig-paths/register src/app.ts | node_modules/.bin/bunyan",
+    "dev": "nodemon -r tsconfig-paths/register src/app.ts",
     "lint:check": "eslint src/**/*.ts",
     "lint:fix": "eslint src/**/*.ts --fix",
     "prettier:check": "prettier --check src/**/*.{ts,json}",
@@ -43,6 +43,7 @@
     "jsonwebtoken": "^9.0.1",
     "lodash": "^4.17.21",
     "mongoose": "^7.3.2",
+    "redis": "^4.6.7",
     "typescript": "^5.1.6",
     "typescript-transform-paths": "^3.4.6"
   },

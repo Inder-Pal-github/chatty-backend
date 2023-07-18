@@ -25,7 +25,7 @@ export interface IAuthDocument extends Document {
   email: string;
   password?: string;
   avatarColor: string;
-  createdAt: string;
+  createdAt: Date;
   camparePassword(password: string): Promise<boolean>;
   hashPassword(password: string): Promise<string>;
 }
